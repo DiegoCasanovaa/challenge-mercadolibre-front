@@ -1,14 +1,16 @@
 import React, { useState } from 'react'
-import { articlesAll } from '../model/articles'
+import { articlesAll, initialValues } from '../model/articles'
 import { getArticlesBySearch } from '../services/search'
 
 export const useGetArticlesBySearch = () => {
 
-    const [articles, setArticles] = useState<articlesAll>()
+    const [articles, setArticles] = useState<articlesAll>(initialValues)
 
     const handleGetArticlesBySearch = (search:string)=>{
 
-        getArticlesBySearch(search).then( response => console.log(response) )
+        getArticlesBySearch(search).then( response =>{
+            setArticles(response.data)
+        } )
     }
-    return [handleGetArticlesBySearch]
+    return {articles, handleGetArticlesBySearch}
 }
