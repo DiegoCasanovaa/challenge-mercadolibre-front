@@ -1,12 +1,16 @@
 import React, { useState } from 'react'
 import { InputAdornment, TextField } from '@mui/material'
 import searchIcon from '../../assets/ic_Search.png'
-import { useGetArticlesBySearch } from '../../hooks/useGetArticlesBySearch'
+import { useNavigate } from 'react-router-dom'
+import { useRecoilState } from 'recoil'
+import { searchAtom } from '../../recoil/searchAtom'
 
 export const SearchInput = () => {
 
-   const [search, setSearch] = useState('');
-   const [ handleGetArticlesBySearch ] = useGetArticlesBySearch();
+   const [search, setSearch] = useRecoilState(searchAtom);
+   const [value, setValue] = useState('');
+
+   const navigate = useNavigate()
   return (
     <TextField
         InputProps={{
@@ -21,21 +25,25 @@ export const SearchInput = () => {
         ),
         }}
         variant="outlined"
-        sx={{ width:'100%', 
+        sx={{ width:'50%', 
             '& .MuiInputBase-root': {
                 padding: '0.3rem',
                 height: 35,
                 backgroundColor:'white'
             }
         }}
-        value={search}
+        value={value}
         onChange={(event)=>{
-            setSearch(event.target.value)
+            setValue(event.target.value)
          }}
         onKeyDown={ (event)=>{
             if(event.key === 'Enter'){
                 event.preventDefault()
-                handleGetArticlesBySearch(search)
+                setSearch(value)
+                navigate({
+                    pathname:'/items',
+                    search:`?search=${value}`
+                })
             } 
         }}
         placeholder='Nunca dejes de buscar'
